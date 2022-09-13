@@ -10,6 +10,9 @@ Completing the tasks of the cyber range, a trainee gains knowledge about the sel
 
 **User interface of the cyber range:**
 
+ <p align="center">
+  <img src="https://user-images.githubusercontent.com/56884203/189836470-c4a44d35-4940-49e7-bfa6-a2da1bb3b747.png" width="500" />
+</p>
 
 ## Conceptual overview of the cyber range design
 The cyber range consists for four main building blocks: a **Virutal Filling Plant**, a **SIEM-based SOC**, **Learning Management System (LMS)**, and a **REST-API**.
@@ -22,7 +25,7 @@ Two of the building blocks are realized through a micro-service architecture bas
 
 - The **Virutal Filling Plant**, in turn, consists of three components contained in one Docker container:
     - a simulation of a [Digital Twin](./src) which is tailored to the needs of the cyber range scenario. It is implemented with [MiniCPS](https://github.com/scy-phy/minicps), an academic framework for simulating cyber-physical systems which builds upon [Mininet](http://mininet.org). 
-    - simulated attacks based on two common tools used for cyberattacks: [Ettercap](https://www.ettercap-project.org/) and [hping](http://www.hping.org/). 
+    - simulated MITM attacks based on [Ettercap](https://www.ettercap-project.org/)
     - an Intrusion Dectection System (IDS) implemented with [Scapy](https://scapy.net/).
 - The **SIEM-based SOC** system is realized with [Dsiem](https://www.dsiem.org/), which builds upon [Filebeat, Elasticsearch, Logstash and Kibana](https://www.elastic.co/). and comprises five Docker containers.
 
@@ -46,8 +49,8 @@ The remaining two building blocks run directly on the Ubuntu-based Virtual Machi
 ```bash
 mkdir cyberrange && \
 cd cyberrange && \
-git clone https://github.com/TARGETframework/Backend_IcebergCRX.git && \
-git clone https://github.com/TARGETframework/Frontend_IcebergCRX.git
+git clone git@github.com:TARGETframework/Backend_IcebergCRX.git && \
+git clone git@github.com:TARGETframework/Frontend_IcebergCRX.git
  ```
  3. **Install dependencies for deployment of the front end:**
 ```bash
@@ -88,38 +91,62 @@ bash docker_start.sh
  ```
 
 ## User Data Management
+
+For easy deployment of the prototype, user data management is not activated by default. To do so, change
+
+ ```bash
+loginDisabled: false
+ ```
+in [Settings.js](https://github.com/TARGETframework/Frontend_IcebergCRX/blob/main/src/Settings.js)
+
 User data management enables the gamification aspect of the cyber range with a score board displaying the scores of the other players in order to motivate the trainees to engage well in the training. 
  <p align="center">
   <img src="https://user-images.githubusercontent.com/56884203/112821702-4fe00c00-9087-11eb-82bd-ca8c09e51f73.png" width="300" />
 </p>
-
 Furthermore, storing the progress of each user in a central database enables the trainer to monitor the conduction of the training and facilitates to evaluate the training after conduction. 
-Every trainee initially needs to be assigned the following attributes.
 
- - **userID**: randomly chosen ID to log into the cyber range, primary key of the Firestore Collection
- - **username**: each userID is assigned a username. This is displayed on the scoreboard
- - **round**: refers to the round (or the group) of conduction of the cyber range training. The trainee will only see the scores of the players that are playing in the same round as he or she does
+For user data management, please deploy the following additional [repository](https://github.com/potiri/CRUserManagement).
+
+```bash
+git clone git@github.com:potiri/CRUserManagement.git
+ ``` 
  
-While taking part in the cyber range training the following data is recorded:
-
-- points: current score of the trainee (out of a maximum score of 101)
-- level: number of tasks the trainee has completed
-- startTime: timestamp when the trainee first logged in
-- taskTimes: time the trainee took to solve a task
-
-## Deploy repository for user registration and VM assignment:
-
-
-### Import and export of user data with .csv files
 1. Create a Service Account on Firebase. This can be done on the Firebase Dashboard via Settings -> Service Account -> "Generate Private Key" as described [here]( https://firebase.google.com/docs/admin/setup#python)
-2. Replace the file [serviceAccount.json](https://github.com/TARGETframework/Frontend_IcebergCRX/blob/main/userDataScripts/serviceAccount.json) with your created key (also naming it serviceAccount.json)
-3. Replace the sample user data in [userdata.csv](https://github.com/TARGETframework/Frontend_IcebergCRX/blob/main/userDataScripts/usernames.csv) with your user data sets
+
+2. Replace the file [serviceAccount.json](https://github.com/TARGETframework/Frontend_IcebergCRX/blob/main/userDataScripts/serviceAccount.json) with your created key (also naming it serviceAccount.json). You will need two create two Firestore databases, one which holds all available VMS (e.g. icebergVMs) and one in which the actual user data (of the registered trainees) is stored (e.g. icebergTraineeData), for this reason, add the following lines to firebase.js (**both in [CRUserManagement](https://github.com/potiri/CRUserManagement) AND [Frontend_IcebergCRX](https://github.com/TARGETframework/Frontend_IcebergCRX))
+
+```bash
+const VM_db = db.collection('icebergVMs')
+const userDashboard = db.collection('icebergTraineeData')
+ ``` 
+
+3. Create a list of available VMs, each assigned a random pseuodnym and the round of training (a VM might be used in different rounds, each time with another pseudonym. This list is saved in [VMs.csv](https://github.com/potiri/CRUserManagement/blob/main/userDataScripts/VMs.csv)
+
+|     IP        |  Pseudonym |    Round   |
+|----------------------|------|--------|
+|     132.199.125.83        |  HackerHolly |    1   |
+|     132.199.125.10        |   SocSusi  |    1   |
+|     132.199.125.23       | PhpPhilip |    1   |
+
+
 4. Run import script:
 ```bash
-cd Frontend_IcebergCRX/userDataScripts && \
+cd https://github.com/potiri/CRUserManagement/blob/main/userDataScripts/importFromCsv.py && \
 python3 importFromCsv.py
  ```
-*To export user data (points, level, times) after the training, run:*
+ 
+5. Deploy User Data Management:
+```bash
+cd https://github.com/potiri/CRUserManagement/blob/main/userDataScripts/importFromCsv.py && \
+npm install
+npm run serve
+ ```
+ 
+The IP the user data management is deployed on serves as a central entry point to the cyber range, possible link it a DNS name, e.g. cyberrange.yourorganization.org
+The trainees register (with a random code/number/pseudonym) of their choice, and are automatically assigned a free VM and forwarded to the VM.
+
+
+6. To export user data (points, level, times) after the training, run:
  
  ```bash
 cd Frontend_IcebergCRX/userDataScripts && \
