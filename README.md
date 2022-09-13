@@ -1,31 +1,18 @@
-# DigitalTwinSocCyberrange
-**DTCRforIR** is Master's thesis project at the University of Regensburg. 
-It is based on a prior project of the University of Regensburg and the Ionian University, namely [DigitalTwinSocCyberrange](https://github.com/DigitalTwinSocCyberrange). 
+# IcebergCRX
+
 This prototype aims to provide training for incident responders in a highly realistic scenario making use of the simulation component of the digital twin of an industrial filling plant. 
-In the scenario, an attacker has gained access to the industrial system and performs two attacks (Man-In-The-Middle via ARP spoofing & a Denial-of-Service attack via ICMP flooding) to disrupt the filling operations. 
+In the scenario, an attacker has gained access to the industrial system and performs a Man-In-The-Middle attack to disrupt the filling operations. 
 
 The components of the industrial system thereby produce log data which are forwarded to a SIEM system. 
 
 Completing the tasks of the cyber range, a trainee gains knowledge about the selected attacks on the industrial system and how to respond these attacks. This is achieved by investigating the corrensponding alarms and events in the SIEM and taking appropriate action to contain, erdicated and finally recover from the attack.
 
 
-The following video gives an introduction to the project and the learning concept of the cyber range.
-<p align="center">
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=6czq4r2_kTk
-" target="_blank"><img src="https://user-images.githubusercontent.com/56884203/112821430-fd065480-9086-11eb-9498-ed027142e340.png" 
-alt="Introduction" width="500" border="2" corder-color="black" /></a> </p> 
-
-
 **User interface of the cyber range:**
 
-![Cyberrange_Learning](https://user-images.githubusercontent.com/56884203/112633883-3302c900-8e3a-11eb-9ed7-7d9406a4b715.png)
-
-
-The concept was evaluated in an extensive **user study**. The results of the user study are presented in the [userStudy repository](https://github.com/DigitalTwinSocCyberrange/userStudy). 
 
 ## Conceptual overview of the cyber range design
 The cyber range consists for four main building blocks: a **Virutal Filling Plant**, a **SIEM-based SOC**, **Learning Management System (LMS)**, and a **REST-API**.
-
 
 
 ## Architecture of the prototype
@@ -58,18 +45,18 @@ The remaining two building blocks run directly on the Ubuntu-based Virtual Machi
 ```bash
 mkdir cyberrange && \
 cd cyberrange && \
-git clone https://github.com/treddl/DTCRforIR_backend.git && \
-git clone https://github.com/treddl/DTCRforIR_frontend.git
+git clone https://github.com/TARGETframework/Backend_IcebergCRX.git && \
+git clone https://github.com/TARGETframework/Frontend_IcebergCRX.git
  ```
  3. **Install dependencies for deployment of the front end:**
 ```bash
-cd DTCRforIR_frontend && \
+cd Frontend_IcebergCRX && \
 bash setup_frontend.sh
  ```
 
 4. **Install dependencies for deployment of the Flask-Api:**
 ```bash
-cd DTCRforIR_backend/src/host_vm && \
+cd Backend_IcebergCRX/src/host_vm && \
 bash setup_cyberrange_host.sh
  ```
 5. **Setup and start the cyber range**: This will start the microservice-infrastructure (Elasticsearch, Filebeat, Logstash, Kibana, Dsiem and Digital Twin), the cyber range front end (running on port 7080) and the API that connects both
@@ -124,47 +111,22 @@ While taking part in the cyber range training the following data is recorded:
 - startTime: timestamp when the trainee first logged in
 - taskTimes: time the trainee took to solve a task
 
+## Deploy repository for user registration and VM assignment:
 
-### Create Firestore Collection
-1. Within a Firebase project create a **Firestore collection named "cyberrangeDashboard"** as described [here](https://firebase.google.com/docs/firestore/quickstart).
-2. To link the cyber range to your collection copy the **firebaseConfig** object from the firebase console (Settings -> General) as described [here](https://firebase.google.com/docs/web/setup#config-object) and add it to the configruation file [firebase.js](https://github.com/DigitalTwinSocCyberrange/frontendCyberrange/blob/main/src/firebase.js).
-### Create user data
-1. Create a list containing the user data with a tuple of userID, username and round
- 
-| userID        | username           | round  |
-| ------------- |:-------------:| -----:|
-|	7683	|	SudoSven	|	1	|
-|	1235	|	SecuritySandra	|	1	|
-|	2364	|	RootRuth	|	1	|
-|	2346	|	Crewmate	|	2	|
-|	5671	|	AnonymousAnna	|	2	|
-|	2397	|	MrsRobot	|	2	|
-
-
-*This example user data set provides user data for two rounds of training with three trainees each.*
-
-2. Add all valid userIDs to the [usernames.js](https://github.com/DigitalTwinSocCyberrange/frontendCyberrange/blob/main/src/data/usernames.js) file in the front end project. *For the previous example this would be adding userIDs 7683, 1235, 2364, 2346, 5671	and 2397.*
-3. Either add the user data manually to the Firestore collection or use the provided python [scripts](https://github.com/DigitalTwinSocCyberrange/frontendCyberrange/tree/main/userDataScripts) as described in the next section to import user data from a csv file to the Firestore collection.
 
 ### Import and export of user data with .csv files
 1. Create a Service Account on Firebase. This can be done on the Firebase Dashboard via Settings -> Service Account -> "Generate Private Key" as described [here]( https://firebase.google.com/docs/admin/setup#python)
-2. Replace the file [serviceAccount.json](https://github.com/DigitalTwinSocCyberrange/frontendCyberrange/blob/main/userDataScripts/serviceAccount.json) with your created key (also naming it serviceAccount.json)
-3. Replace the sample user data in [userdata.csv](https://github.com/DigitalTwinSocCyberrange/frontendCyberrange/tree/main/userDataScripts/usernames.csv) with your user data sets
+2. Replace the file [serviceAccount.json](https://github.com/TARGETframework/Frontend_IcebergCRX/blob/main/userDataScripts/serviceAccount.json) with your created key (also naming it serviceAccount.json)
+3. Replace the sample user data in [userdata.csv](https://github.com/TARGETframework/Frontend_IcebergCRX/blob/main/userDataScripts/usernames.csv) with your user data sets
 4. Run import script:
 ```bash
-cd DTCRforIR_frontend/userDataScripts && \
+cd Frontend_IcebergCRX/userDataScripts && \
 python3 importFromCsv.py
  ```
 *To export user data (points, level, times) after the training, run:*
  
  ```bash
-cd DTCRforIR_frontend/userDataScripts && \
+cd Frontend_IcebergCRX/userDataScripts && \
 python3 exportToCsv.py
  ```
-## Research and Citation
-Please consider citing our [DBSec'21](https://doi.org/10.1007/978-3-030-81242-3_17) publication when using the **DigitalTwinSocCyberrange** for your research.
 
-### Conference presentation
-<p align="center">
-<a href="https://www.youtube.com/watch?v=MSkmycU0lWk" target="_blank"><img src="https://img.youtube.com/vi/MSkmycU0lWk/0.jpg" 
-alt="Conference presentation" width="500" border="2" corder-color="black" /></a> </p> 
