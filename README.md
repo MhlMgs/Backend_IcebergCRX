@@ -1,11 +1,15 @@
 # IcebergCRX
 
-This prototype aims to provide training for incident responders in a highly realistic scenario making use of the simulation component of the digital twin of an industrial filling plant. 
-In the scenario, an attacker has gained access to the industrial system and performs a Man-In-The-Middle attack to disrupt the filling operations. 
+## Method within TARGET framework development
+This CRX was designed, implemented and evaluated along with the development of the TARGET framework, a framework for CRX evaluation.
 
-The components of the industrial system thereby produce log data which are forwarded to a SIEM system. 
+![image](https://user-images.githubusercontent.com/56884203/189913857-4fc2d88d-6f01-4561-a6e9-c68f0483fb2a.png)
 
-Completing the tasks of the cyber range, a trainee gains knowledge about the selected attacks on the industrial system and how to respond these attacks. This is achieved by investigating the corrensponding alarms and events in the SIEM and taking appropriate action to contain, erdicated and finally recover from the attack.
+
+
+## Technical description
+This prototype aims to provide training for incident responders in a highly realistic scenario making use of the simulation component of the digital twin of an industrial filling plant. In the scenario, an attacker has gained access to the industrial system and performs a Man-In-The-Middle attack to disrupt the filling operations. 
+The components of the industrial system thereby produce log data which are forwarded to a SIEM system. Completing the tasks of the cyber range, a trainee gains knowledge about the selected attacks on the industrial system and how to respond these attacks. This is achieved by investigating the corrensponding alarms and events in the SIEM and taking appropriate action to contain, erdicated and finally recover from the attack.
 
 
 **User interface of the cyber range:**
