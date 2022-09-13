@@ -29,13 +29,14 @@ Two of the building blocks are realized through a micro-service architecture bas
 The remaining two building blocks run directly on the Ubuntu-based Virtual Machine.
 
 
-- The **Learning Management System (LMS)** is implemented with the JavaScript Framework [Vue.js](https://vuejs.org/). The respective source code is stored in the [frontendCyberrange](https://github.com/DigitalTwinSocCyberrange/frontendCyberrange) repository of the project.
-- A **[REST-API]((https://github.com/DigitalTwinSocCyberrange/DigitalTwinCyberrange/tree/main/src/pyrest))** implemented with [Flask](https://flask.palletsprojects.com/en/1.1.x/) connects the LMS, the Digital Twin and the SIEM-System
+- The **Learning Management System (LMS)** is implemented with the JavaScript Framework [Vue.js](https://vuejs.org/). The respective source code is stored in the [Frontend](https://github.com/TARGETframework/Frontend_IcebergCRX) repository of the project.
+- A **[REST-API]((https://github.com/TARGETframework/Backend_IcebergCRX/tree/main/src/pyrest))** implemented with [Flask](https://flask.palletsprojects.com/en/1.1.x/) connects the LMS, the Digital Twin and the SIEM-System
 - The user data is stored in a Firestore collection, described in detail [here](#user-data-management)
 
  <p align="center">
-  <img src="https://user-images.githubusercontent.com/56884203/112836327-bb7fa480-909a-11eb-85bc-8307505d52f4.png" />
+  <img src="https://user-images.githubusercontent.com/56884203/189820082-c1b67f1a-a2d5-4e98-ab14-fcaf3164c698.png" width="500" />
 </p>
+
 
 ## Installation (for Ubuntu 20.04)
 
@@ -69,12 +70,7 @@ bash init_cyberrange.sh
 ```bash
 Enter the Hostname or IP Address where the cyber range will be deployed: 199.999.9.99
 ```
- 7. Access the cyber range on port 7080: **ht<span>tp://</span>199.999.9.99:7080**. To get an idea of the prototype, you can use the demo user (without user data management) **ID=127**
- <p align="center">
-  <img src="https://user-images.githubusercontent.com/56884203/112821652-3e96ff80-9087-11eb-805f-aee2533ac3d7.png" width="500" />
-</p>
-
- 8. If you want to conduct a cyber range training with multiple participants and use the scoreboard, please proceed with [User Data Management](#user-data-management)
+ 7. If you want to conduct a cyber range training with multiple participants and use the scoreboard, please proceed with [User Data Management](#user-data-management)
 ## Shutdown
 To shut down the infrastructure you can either the use the API-functionality **ht<span>tp://</span>199.999.9.99:9090/stop_cr** or run the shutdown script:
  
